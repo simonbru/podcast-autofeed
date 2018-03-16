@@ -8,6 +8,7 @@ name = "pypi"
 [packages]
 
 bottle = "==0.12.*"
+uwsgi = "*"
 
 
 [dev-packages]
