@@ -9,7 +9,7 @@ from pathlib import Path
 import bottle
 
 
-STATIC_URL = os.environ['STATIC_URL']
+BASE_URL = os.environ['BASE_URL']
 PODCAST_DIR = os.environ['PODCAST_DIR']
 
 app = bottle.Bottle()
@@ -21,7 +21,7 @@ FEED_TPL = """\
   <channel>
     <title>Symen autofeed</title>
     <description>Automatically fenerated feed</description>
-    <link>{{base_url}}</link>
+    <link>{{link}}</link>
     % for item in items:
     <item>
         <title>{{item['title']}}</title>
@@ -40,7 +40,7 @@ FEED_TPL = """\
 """
 
 
-@app.get('/feed')
+@app.get('/feed', name="feed")
 def view_feed():
     items = []
     files = (
@@ -56,23 +56,26 @@ def view_feed():
         )
         item['guid'] = hash.hexdigest()
         item['title'] = file.name
-        desc = ''
+        item['desc'] = ''
         item['pub_date'] = formatdate(stat.st_mtime)
-        escaped_name = urllib.parse.quote(file.name)
-        item['file_url'] = f"{STATIC_URL}/{escaped_name}"
+        static_path = app.get_url("static", path=file.name)
+        item['file_url'] = BASE_URL + static_path
         item['file_size'] = stat.st_size
         items.append(item)
     bottle.response.set_header(
         "Content-Type", "text/xml; charset=utf-8"
     )
+    static_url = BASE_URL + app.get_url("static", path="")
     return bottle.template(
-        FEED_TPL, base_url=STATIC_URL, items=items
+        FEED_TPL, link=static_url, items=items
     )
 
 
-@app.get('/<path:path>')
+@app.get('/<path:path>', name="static")
 def view_static(path):
     return bottle.static_file(path, root=PODCAST_DIR)
 
 
-app.run(host='::', port=8006, debug=True, reloader=True)
+application = app.wsgi
+if __name__ == '__main__':
+    app.run(host='::', port=8006, debug=True, reloader=True)
