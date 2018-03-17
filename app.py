@@ -48,7 +48,10 @@ def view_feed():
         Path(PODCAST_DIR).glob('*.*')
         if file.is_file() and not file.name.startswith('.')
     )
-    for file in files:
+    sorted_files = sorted(
+        files, reverse=True, key=lambda it: it.stat().st_mtime
+    )
+    for file in sorted_files:
         item = {}
         stat = file.stat()
         hash = md5(
