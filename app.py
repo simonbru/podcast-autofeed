@@ -61,7 +61,8 @@ def view_feed():
         item['title'] = file.name
         item['desc'] = ''
         item['pub_date'] = formatdate(stat.st_mtime)
-        static_path = app.get_url("static", path=file.name)
+        quoted_name = urllib.parse.quote(file.name)
+        static_path = app.get_url("static", path=quoted_name)
         item['file_url'] = BASE_URL + static_path
         item['file_size'] = stat.st_size
         items.append(item)
