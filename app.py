@@ -16,11 +16,12 @@ app = bottle.Bottle()
 
 FEED_TPL = """\
 <?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="stylesheet.xsl" ?>
 <rss version="2.0"
      xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd">
   <channel>
     <title>Symen autofeed</title>
-    <description>Automatically fenerated feed</description>
+    <description>Automatically generated feed</description>
     <link>{{link}}</link>
     % for item in items:
     <item>
@@ -73,6 +74,11 @@ def view_feed():
     return bottle.template(
         FEED_TPL, link=static_url, items=items
     )
+
+
+@app.get('/stylesheet.xsl', name="stylesheet")
+def view_stylesheet():
+    return bottle.static_file('stylesheet.xsl', str(Path(__file__).parent))
 
 
 @app.get('/<path:path>', name="static")
