@@ -29,7 +29,9 @@ FEED_TPL = """\
         <description>{{item['desc']}}</description>
         <pubDate>{{item['pub_date']}}</pubDate>
         <enclosure url="{{item['file_url']}}"
-                    % # type="audio/mpeg"
+                    % if item.get('type'):
+                    type="{{item['type']}}"
+                    % end
                     length="{{item['file_size']}}"
         />
         % # <itunes:duration></itunes:duration>
@@ -66,6 +68,10 @@ def view_feed():
         static_path = app.get_url("static", path=quoted_name)
         item['file_url'] = BASE_URL + static_path
         item['file_size'] = stat.st_size
+        if file.suffix.lstrip('.') in ('mp4', 'mkv', 'webm', 'm4v'):
+            item['type'] = 'video'
+        else:
+            item['type'] = ''
         items.append(item)
     bottle.response.set_header(
         "Content-Type", "text/xml; charset=utf-8"

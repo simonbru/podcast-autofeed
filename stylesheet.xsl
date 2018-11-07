@@ -16,6 +16,11 @@
           .item {
             margin-bottom: 20px;
           }
+
+          video {
+            display: block;
+            max-width: 100%;
+          }
         </style>
       </head>
       <body>
@@ -32,6 +37,13 @@
     </html>
   </xsl:template>
 
+  <xsl:attribute-set name="media-params">
+    <xsl:attribute name="src">  
+      <xsl:value-of select="enclosure/@url"/>
+    </xsl:attribute>
+    <xsl:attribute name="controls"/>
+  </xsl:attribute-set>
+
   <xsl:template match="item">
     <div class="item">
       <xsl:element name="a">
@@ -40,6 +52,10 @@
         </xsl:attribute>
         <xsl:value-of select="title"/>
       </xsl:element>
+      <xsl:if test="enclosure[contains(@url, 'mp4')]">
+        <xsl:element name="video" use-attribute-sets="media-params">
+        </xsl:element>
+      </xsl:if>
     </div>
   </xsl:template>
 
