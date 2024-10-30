@@ -1,0 +1,16 @@
+[project]
+name = "podcast-autofeed"
+version = "0.1.0"
+description = "Generate podcast feed from files in a folder"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "bottle ~=0.13.2",
+    "uwsgi ~=2.0.28",
+]
+
+[tool.uv]
+dev-dependencies = [
+    "ipdb >=0.13.13",
+    "ipython >=8.29.0",
+]

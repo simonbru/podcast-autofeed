@@ -7,9 +7,8 @@ Assuming we want to run the app at https://foo.bar/podcasts
 ```bash
 export BASE_URL=https://foo.bar
 export PODCAST_DIR=/var/podcasts
-# Note pipenv automatically loads environment from .env file
 
-pipenv run uwsgi \
+uv run uwsgi \
     --http :8006 \
     --processes 1 \
     --threads 5 \
