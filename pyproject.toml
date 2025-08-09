@@ -3,7 +3,7 @@ name = "podcast-autofeed"
 version = "0.1.0"
 description = "Generate podcast feed from files in a folder"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.13"
 dependencies = [
     "bottle ~=0.13.2",
     "uwsgi ~=2.0.28",
